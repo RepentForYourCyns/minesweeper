@@ -1,3 +1,4 @@
+package cynofsin.minesweeper;
 import static org.junit.Assert.assertArrayEquals;
 
 import org.junit.Test;
