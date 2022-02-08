@@ -11,13 +11,11 @@ import java.util.Random;
  * iterate in any particular order.
  */
 public class Minefield {
-	Random rng;
-	int height, width; // Height and width of the field in cells
-	boolean[][] mines;
-	Integer[][] hints;
+	private int height, width; // Height and width of the field in cells
+	private boolean[][] mines;
+	private Integer[][] hints;
 
 	public Minefield(int x, int y, Random rng) {
-		this.rng = rng == null ? new Random() : rng;
 		width = x;
 		height = y;
 
@@ -68,5 +66,13 @@ public class Minefield {
 			}
 		}
 		return mines;
+	}
+
+	public int getHeight() {
+		return height;
+	}
+
+	public int getWidth() {
+		return width;
 	}
 }

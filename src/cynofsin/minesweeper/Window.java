@@ -1,21 +1,21 @@
 package cynofsin.minesweeper;
 
 import java.awt.BorderLayout;
-import java.awt.FlowLayout;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 
-import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.WindowConstants;
 
 public class Window {
-    private JFrame window;
-
     public Window() {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
@@ -26,7 +26,7 @@ public class Window {
     }
 
     private void makeGUI() {
-        window = new JFrame("Minesweeper");
+        final JFrame window = new JFrame("Minesweeper");
         window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         makeMenuBar(window);
@@ -44,11 +44,23 @@ public class Window {
         contentPane.add(new JPanel(), BorderLayout.SOUTH);
         contentPane.add(new JPanel(), BorderLayout.WEST);
 
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        }
+        catch (ClassNotFoundException | InstantiationException
+                | IllegalAccessException | UnsupportedLookAndFeelException e) {
+            e.printStackTrace();
+        }
+
         window.pack();
-        Dimension minSize = new Dimension((minefieldPanel.getWidthInCells() + 8) * 50, (minefieldPanel.getHeightInCells() + 8) * 50);
+        Dimension minSize = new Dimension((minefieldPanel.getWidthInCells() + 4) * 20, (minefieldPanel.getHeightInCells() + 4) * 20);
         window.setMinimumSize(minSize);
         window.setSize(minSize);
         window.setVisible(true);
+
+        Graphics2D graphics = (Graphics2D) contentPane.getGraphics();
+        graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        graphics.setRenderingHint(RenderingHints.KEY_RESOLUTION_VARIANT, RenderingHints.VALUE_RESOLUTION_VARIANT_SIZE_FIT);
     }
 
     private void makeMenuBar(JFrame window) {
@@ -56,6 +68,7 @@ public class Window {
         JMenuBar menubar = new JMenuBar();
         menubar.add(fileMenu);
         window.setJMenuBar(menubar);
+
         // TODO: Add reset and exit options to file submenu
     }
 }

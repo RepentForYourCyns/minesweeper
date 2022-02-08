@@ -1,68 +1,73 @@
 package cynofsin.minesweeper;
 
+import java.awt.*;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.GridLayout;
+
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import javax.swing.border.BevelBorder;
+
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-
-import javax.swing.JPanel;
+import java.util.Random;
 
 public class MinefieldPanel extends JPanel {
-    class Cell extends JPanel implements MouseListener {
-        
-        public Cell() {
-            super();
-            this.setOpaque(false);
-        }
+    class Cell extends JButton implements MouseListener {
+        int x, y;
 
-        @Override
-        public void mouseClicked(MouseEvent e) {
-            // TODO Auto-generated method stub
-        }
-
-        @Override
-        public void mousePressed(MouseEvent e) {}
-
-        @Override
-        public void mouseReleased(MouseEvent e) {}
-
-        @Override
-        public void mouseEntered(MouseEvent e) {
-            // TODO Auto-generated method stub
-        }
-
-        @Override
-        public void mouseExited(MouseEvent e) {
-            // TODO Auto-generated method stub
+        public Cell(int x, int y) {
+            this.x = x;
+            this.y = y;
+            this.setBorder(new BevelBorder(BevelBorder.RAISED));
+            this.addMouseListener(this);
         }
 
         @Override
         protected void paintComponent(Graphics g) {
+            this.setVisible(!session.isRevealed(x, y));
             super.paintComponent(g);
         }
 
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            session.reveal(x, y);
+        }
+
+        @Override
+        public void mousePressed(MouseEvent e) {
+            this.setBorder(new BevelBorder(BevelBorder.LOWERED));
+            // this.repaint();
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent e) {
+            this.setBorder(new BevelBorder(BevelBorder.RAISED));
+            // this.repaint();
+        }
+
+        @Override
+        public void mouseEntered(MouseEvent e) {
+        }
+
+        @Override
+        public void mouseExited(MouseEvent e) {}
     }
 
-    private static final int WIDTH = 10;
-    private static final int HEIGHT = 12;
+    private static final int WIDTH = 30;
+    private static final int HEIGHT = 40;
+    private GameSession session = new GameSession(new Minefield(WIDTH, HEIGHT, new Random()));
 
     public MinefieldPanel() {
         super();
-        this.setLayout(new GridLayout(6, 6, HEIGHT, WIDTH));
-        for (int i = 0; i < WIDTH * HEIGHT; i++) {
-            this.add(new Cell());
+        this.setLayout(new GridLayout(HEIGHT, WIDTH));
+        for (int i = 0; i < WIDTH; i++) {
+            for (int j = 0; j < HEIGHT; j++) {
+                this.add(new Cell(i, j));
+            }
         }
-    }
-
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-
-        g.setColor(new Color(200, 200, 200));
-        g.fillRect(0, 0, this.getSize().width, this.getSize().height);
-        drawSpacedLines(g, Color.DARK_GRAY, WIDTH, HEIGHT, 2);
     }
 
     @Override
