@@ -17,22 +17,31 @@ import java.util.Random;
 public class MinefieldPanel extends JPanel {
     class Cell extends JButton implements MouseListener {
         int x, y;
+        boolean containsMine = false;
 
         public Cell(int x, int y) {
             this.x = x;
             this.y = y;
             this.setBorder(new BevelBorder(BevelBorder.RAISED));
             this.addMouseListener(this);
+            this.containsMine = session.isMine(this.x, this.y);
         }
 
         @Override
         protected void paintComponent(Graphics g) {
-            this.setVisible(!session.isRevealed(x, y));
-            super.paintComponent(g);
+            // this.setVisible(!session.isRevealed(x, y));
+            if(!session.isRevealed(x, y)) {
+                super.paintComponent(g);
+            }
+            else {
+                g.setColor(Color.black);
+                g.fillRect(0, 0, getWidth(), getHeight());
+            }
         }
 
         @Override
         public void mouseClicked(MouseEvent e) {
+            this.setBorder(null);
             session.reveal(x, y);
         }
 

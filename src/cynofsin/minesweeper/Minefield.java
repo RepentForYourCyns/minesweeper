@@ -12,15 +12,13 @@ import java.util.Random;
  */
 public class Minefield {
 	private int height, width; // Height and width of the field in cells
-	private boolean[][] mines;
 	private Integer[][] hints;
 
 	public Minefield(int x, int y, Random rng) {
 		width = x;
 		height = y;
 
-		mines = generateMines(width, height, rng);
-		hints = generateHints(mines);
+		hints = generateHints(generateMines(width, height, rng));
 	}
 
 	public static Integer[][] generateHints(boolean[][] mines) {
@@ -74,5 +72,9 @@ public class Minefield {
 
 	public int getWidth() {
 		return width;
+	}
+
+	public Integer[][] getHints() {
+		return hints;
 	}
 }

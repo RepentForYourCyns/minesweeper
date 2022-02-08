@@ -2,11 +2,13 @@ package cynofsin.minesweeper;
 
 public class GameSession {
 	private int boardWidth, boardHeight;
-	boolean[][] revealed;
+	private boolean[][] revealed;
+	private Minefield minefield;
 
 	public GameSession(Minefield minefield) {
-		boardHeight = minefield.getHeight();
-		boardWidth = minefield.getWidth();
+		this.minefield = minefield;
+		boardHeight = this.minefield.getHeight();
+		boardWidth = this.minefield.getWidth();
 		revealed = new boolean[boardWidth][boardHeight]; // Sticking to my coordinate convention
 	}
 
@@ -18,5 +20,11 @@ public class GameSession {
 		revealed[x][y] = true;
 	}
 
-	
+	public boolean isMine(int x, int y) {
+		return minefield.getHints()[x][y] == null;
+	}
+
+	public int getHint(int x, int y) {
+		return minefield.getHints()[x][y];
+	}
 }
