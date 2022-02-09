@@ -24,7 +24,7 @@ public class GameSession {
 		return minefield.getHints()[x][y] == null;
 	}
 
-	public int getHint(int x, int y) {
+	public Integer getHint(int x, int y) {
 		return minefield.getHints()[x][y];
 	}
 }
