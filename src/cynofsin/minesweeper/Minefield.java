@@ -60,7 +60,7 @@ public class Minefield {
 		boolean[][] mines = new boolean[x][y];
 		for (int i = 0; i < mines.length; i++) {
 			for (int j = 0; j < mines[0].length; j++) {
-				mines[i][j] = rng.nextFloat() < 0.5;
+				mines[i][j] = rng.nextFloat() < 0.2;
 			}
 		}
 		return mines;

@@ -6,6 +6,8 @@ import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Random;
 
 import javax.swing.JButton;
@@ -26,7 +28,7 @@ public class MinefieldPanel extends JPanel {
 
         @Override
         public void mouseClicked(MouseEvent e) {
-            revealCell(this);
+            reveal(this);
         }
 
         @Override
@@ -87,6 +89,85 @@ public class MinefieldPanel extends JPanel {
                 this.add(new HiddenCell(i, j));
             }
         }
+    }
+
+    private void reveal(HiddenCell cell) {
+        Queue<HiddenCell> cellsToReveal = new LinkedList<>();
+        cellsToReveal.add(cell);
+        do {
+            HiddenCell currentCell = cellsToReveal.poll();
+            int x = currentCell.x;
+            int y = currentCell.y;
+
+            Integer hint = session.getHint(x, y);
+            if (hint != null && hint.equals(0)) {
+                HiddenCell[] adjacents = new HiddenCell[4];
+
+                int indexAbove = (currentCell.y * WIDTH) + currentCell.x - WIDTH;
+                if (!(indexAbove < 0 || indexAbove > (HEIGHT * WIDTH) - 1)) {
+                    HiddenCell cellAbove = this
+                            .getComponent(indexAbove) instanceof HiddenCell
+                                    ? (HiddenCell) this.getComponent(indexAbove)
+                                    : null;
+                    // HiddenCell cellAbove = (HiddenCell)
+                    // this.getComponent(indexAbove);
+                    if (cellAbove != null
+                            && !session.isMine(cellAbove.x, cellAbove.y)) {
+                        cellsToReveal.add(cellAbove);
+                    }
+                }
+
+                int indexBelow = (currentCell.y * WIDTH) + currentCell.x + WIDTH;
+                if (!(indexBelow < 0 || indexBelow > (HEIGHT * WIDTH) - 1)) {
+                    // HiddenCell cellBelow = (HiddenCell) this
+                    // .getComponent(indexBelow);
+                    HiddenCell cellBelow = this
+                            .getComponent(indexBelow) instanceof HiddenCell
+                                    ? (HiddenCell) this.getComponent(indexBelow)
+                                    : null;
+                    if (cellBelow != null
+                            && !session.isMine(cellBelow.x, cellBelow.y)) {
+                        cellsToReveal.add(cellBelow);
+                    }
+                }
+
+                int indexLeft = (currentCell.y * WIDTH) + currentCell.x - 1;
+                if (!(indexLeft < 0 || indexLeft > (HEIGHT * WIDTH) - 1)) {
+                    // HiddenCell cellLeft = (HiddenCell) this
+                    // .getComponent(indexLeft);
+                    HiddenCell cellLeft = this
+                            .getComponent(indexLeft) instanceof HiddenCell
+                                    ? (HiddenCell) this.getComponent(indexLeft)
+                                    : null;
+                    if (cellLeft != null
+                            && !session.isMine(cellLeft.x, cellLeft.y)) {
+                        cellsToReveal.add(cellLeft);
+                    }
+                }
+
+                int indexRight = (currentCell.y * WIDTH) + currentCell.x + 1;
+                if (!(indexRight < 0 || indexRight > (HEIGHT * WIDTH) - 1)) {
+                    // HiddenCell cellRight = (HiddenCell) this
+                    //         .getComponent(indexRight);
+                    HiddenCell cellRight = this
+                            .getComponent(indexRight) instanceof HiddenCell
+                                    ? (HiddenCell) this.getComponent(indexRight)
+                                    : null;
+                    if (cellRight != null && !session.isMine(cellRight.x, cellRight.y)) {
+                        cellsToReveal.add(cellRight);
+                    }
+                }
+
+                for (HiddenCell adjacent : adjacents) {
+                    if(adjacent != null) {
+                        cellsToReveal.add(adjacent);
+                    }
+                }
+            }
+
+            revealCell(currentCell);
+        }
+        while (!cellsToReveal.isEmpty());
     }
 
     private void revealCell(HiddenCell cell) {
