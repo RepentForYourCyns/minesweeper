@@ -55,13 +55,16 @@ public class MinefieldPanel extends JPanel {
             this.y = y;
             this.mine = session.isMine(this.x, this.y);
             if (!mine) {
-                this.add(new JLabel(session.getHint(x, y).toString()));
+                String hint = session.getHint(x, y).toString();
+                if (!hint.equals("0")) {
+                    this.add(new JLabel(hint));
+                }
             }
         }
 
         @Override
         protected void paintComponent(Graphics g) {
-            if(!mine) {
+            if (!mine) {
                 super.paintComponent(g);
             }
             else {
@@ -69,7 +72,7 @@ public class MinefieldPanel extends JPanel {
                 g.fillRect(0, 0, getWidth(), getHeight());
             }
         }
-    } 
+    }
 
     private static final int WIDTH = 30;
     private static final int HEIGHT = 40;
