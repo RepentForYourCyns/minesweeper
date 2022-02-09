@@ -103,58 +103,20 @@ public class MinefieldPanel extends JPanel {
             if (hint != null && hint.equals(0)) {
                 HiddenCell[] adjacents = new HiddenCell[4];
 
-                int indexAbove = (currentCell.y * WIDTH) + currentCell.x - WIDTH;
-                if (!(indexAbove < 0 || indexAbove > (HEIGHT * WIDTH) - 1)) {
-                    HiddenCell cellAbove = this
-                            .getComponent(indexAbove) instanceof HiddenCell
-                                    ? (HiddenCell) this.getComponent(indexAbove)
-                                    : null;
-                    // HiddenCell cellAbove = (HiddenCell)
-                    // this.getComponent(indexAbove);
-                    if (cellAbove != null
-                            && !session.isMine(cellAbove.x, cellAbove.y)) {
-                        cellsToReveal.add(cellAbove);
-                    }
-                }
-
-                int indexBelow = (currentCell.y * WIDTH) + currentCell.x + WIDTH;
-                if (!(indexBelow < 0 || indexBelow > (HEIGHT * WIDTH) - 1)) {
-                    // HiddenCell cellBelow = (HiddenCell) this
-                    // .getComponent(indexBelow);
-                    HiddenCell cellBelow = this
-                            .getComponent(indexBelow) instanceof HiddenCell
-                                    ? (HiddenCell) this.getComponent(indexBelow)
-                                    : null;
-                    if (cellBelow != null
-                            && !session.isMine(cellBelow.x, cellBelow.y)) {
-                        cellsToReveal.add(cellBelow);
-                    }
-                }
-
-                int indexLeft = (currentCell.y * WIDTH) + currentCell.x - 1;
-                if (!(indexLeft < 0 || indexLeft > (HEIGHT * WIDTH) - 1)) {
-                    // HiddenCell cellLeft = (HiddenCell) this
-                    // .getComponent(indexLeft);
-                    HiddenCell cellLeft = this
-                            .getComponent(indexLeft) instanceof HiddenCell
-                                    ? (HiddenCell) this.getComponent(indexLeft)
-                                    : null;
-                    if (cellLeft != null
-                            && !session.isMine(cellLeft.x, cellLeft.y)) {
-                        cellsToReveal.add(cellLeft);
-                    }
-                }
-
-                int indexRight = (currentCell.y * WIDTH) + currentCell.x + 1;
-                if (!(indexRight < 0 || indexRight > (HEIGHT * WIDTH) - 1)) {
-                    // HiddenCell cellRight = (HiddenCell) this
-                    //         .getComponent(indexRight);
-                    HiddenCell cellRight = this
-                            .getComponent(indexRight) instanceof HiddenCell
-                                    ? (HiddenCell) this.getComponent(indexRight)
-                                    : null;
-                    if (cellRight != null && !session.isMine(cellRight.x, cellRight.y)) {
-                        cellsToReveal.add(cellRight);
+                for(int vertOffset = -WIDTH; vertOffset <= WIDTH; vertOffset = vertOffset + WIDTH) {
+                    for(int horizOffset = -1; horizOffset <= 1; horizOffset++) {
+                        if(!(vertOffset == 0 && horizOffset == 0)) {
+                            int offsetIndex = (currentCell.y * WIDTH) + currentCell.x + horizOffset + vertOffset;
+                            if (!(offsetIndex < 0 || offsetIndex > (HEIGHT * WIDTH) - 1)) {
+                                HiddenCell adjacentCell = this
+                                        .getComponent(offsetIndex) instanceof HiddenCell
+                                                ? (HiddenCell) this.getComponent(offsetIndex)
+                                                : null;
+                                if (adjacentCell != null && !session.isMine(adjacentCell.x, adjacentCell.y)) {
+                                    cellsToReveal.add(adjacentCell);
+                                }
+                            }
+                        }
                     }
                 }
 
