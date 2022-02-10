@@ -1,6 +1,7 @@
 package cynofsin.minesweeper;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.GridLayout;
@@ -13,6 +14,7 @@ import java.util.Random;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 import javax.swing.border.BevelBorder;
 
 public class MinefieldPanel extends JPanel {
@@ -59,7 +61,11 @@ public class MinefieldPanel extends JPanel {
             if (!mine) {
                 String hint = session.getHint(x, y).toString();
                 if (!hint.equals("0")) {
-                    this.add(new JLabel(hint));
+                    JLabel hintLabel = new JLabel(hint);
+                    hintLabel.setVerticalAlignment(SwingConstants.CENTER);
+                    hintLabel.setHorizontalAlignment(SwingConstants.CENTER);
+                    this.setLayout(new GridLayout());
+                    this.add(hintLabel);
                 }
             }
         }
@@ -101,28 +107,20 @@ public class MinefieldPanel extends JPanel {
 
             Integer hint = session.getHint(x, y);
             if (hint != null && hint.equals(0)) {
-                HiddenCell[] adjacents = new HiddenCell[4];
-
-                for(int vertOffset = -WIDTH; vertOffset <= WIDTH; vertOffset = vertOffset + WIDTH) {
-                    for(int horizOffset = -1; horizOffset <= 1; horizOffset++) {
-                        if(!(vertOffset == 0 && horizOffset == 0)) {
-                            int offsetIndex = (currentCell.y * WIDTH) + currentCell.x + horizOffset + vertOffset;
-                            if (!(offsetIndex < 0 || offsetIndex > (HEIGHT * WIDTH) - 1)) {
-                                HiddenCell adjacentCell = this
-                                        .getComponent(offsetIndex) instanceof HiddenCell
-                                                ? (HiddenCell) this.getComponent(offsetIndex)
-                                                : null;
-                                if (adjacentCell != null && !session.isMine(adjacentCell.x, adjacentCell.y)) {
+                for (int vertOffset = -1; vertOffset <= 1; vertOffset++) {
+                    for (int horizOffset = -1; horizOffset <= 1; horizOffset++) {
+                        if (!(vertOffset == 0 && horizOffset == 0)) {
+                            int xOffset = x + horizOffset;
+                            int yOffset = y + vertOffset;
+                            if (xOffset < WIDTH && yOffset < HEIGHT && !(xOffset < 0)
+                                    && !(yOffset < 0)) {
+                                HiddenCell adjacentCell = getHiddenCell(xOffset, yOffset);
+                                if (adjacentCell != null
+                                        && !session.isMine(adjacentCell.x, adjacentCell.y)) {
                                     cellsToReveal.add(adjacentCell);
                                 }
                             }
                         }
-                    }
-                }
-
-                for (HiddenCell adjacent : adjacents) {
-                    if(adjacent != null) {
-                        cellsToReveal.add(adjacent);
                     }
                 }
             }
@@ -166,5 +164,19 @@ public class MinefieldPanel extends JPanel {
 
     public int getHeightInCells() {
         return HEIGHT;
+    }
+
+    private HiddenCell getHiddenCell(int x, int y) {
+        int compIndex = (y * WIDTH) + x;
+        if (!(compIndex < 0 || compIndex > (HEIGHT * WIDTH) - 1)) {
+            Component component = getComponent(compIndex);
+            HiddenCell toReturn = component instanceof HiddenCell
+                    ? (HiddenCell) component
+                    : null;
+            return toReturn;
+        }
+        else {
+            return null;
+        }
     }
 }

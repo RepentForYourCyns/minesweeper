@@ -2,9 +2,9 @@ package cynofsin.minesweeper;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
-import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.Dimension;
 
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -34,7 +34,8 @@ public class Window {
         contentPane.setLayout(new BorderLayout(3, 3));
         MinefieldPanel minefieldPanel = new MinefieldPanel();
         JPanel minefieldPanelContainer = new JPanel();
-        
+
+        // minefieldPanelContainer.setLayout(new BorderLayout());
         minefieldPanelContainer.add(minefieldPanel);
         contentPane.add(minefieldPanelContainer, BorderLayout.CENTER);
         contentPane.add(new JPanel(), BorderLayout.NORTH);
@@ -57,8 +58,10 @@ public class Window {
         window.setVisible(true);
 
         Graphics2D graphics = (Graphics2D) contentPane.getGraphics();
-        graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        graphics.setRenderingHint(RenderingHints.KEY_RESOLUTION_VARIANT, RenderingHints.VALUE_RESOLUTION_VARIANT_SIZE_FIT);
+        graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                RenderingHints.VALUE_ANTIALIAS_ON);
+        graphics.setRenderingHint(RenderingHints.KEY_RESOLUTION_VARIANT,
+                RenderingHints.VALUE_RESOLUTION_VARIANT_SIZE_FIT);
     }
 
     private void makeMenuBar(JFrame window) {
