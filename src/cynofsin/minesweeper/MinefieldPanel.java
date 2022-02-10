@@ -3,6 +3,7 @@ package cynofsin.minesweeper;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.event.MouseEvent;
@@ -15,6 +16,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
 import javax.swing.border.BevelBorder;
 
 public class MinefieldPanel extends JPanel {
@@ -53,6 +55,7 @@ public class MinefieldPanel extends JPanel {
     class RevealedCell extends JPanel {
         private int x, y;
         boolean mine = false;
+        JLabel hintLabel;
 
         public RevealedCell(int x, int y) {
             this.x = x;
@@ -61,7 +64,7 @@ public class MinefieldPanel extends JPanel {
             if (!mine) {
                 String hint = session.getHint(x, y).toString();
                 if (!hint.equals("0")) {
-                    JLabel hintLabel = new JLabel(hint);
+                    hintLabel = new JLabel(hint);
                     hintLabel.setVerticalAlignment(SwingConstants.CENTER);
                     hintLabel.setHorizontalAlignment(SwingConstants.CENTER);
                     this.setLayout(new GridLayout());
@@ -79,6 +82,10 @@ public class MinefieldPanel extends JPanel {
                 g.setColor(Color.red);
                 g.fillRect(0, 0, getWidth(), getHeight());
             }
+
+            if(hintLabel != null) {
+                hintLabel.setFont(new Font(hintLabel.getFont().getName(), Font.PLAIN, (int) (3.0 * this.getHeight() / 5)));
+            }
         }
     }
 
@@ -89,11 +96,14 @@ public class MinefieldPanel extends JPanel {
 
     public MinefieldPanel() {
         super();
-        this.setLayout(new GridLayout(HEIGHT, WIDTH));
+        this.setLayout(new GridLayout(HEIGHT, WIDTH, 1, 1));
         for (int j = 0; j < HEIGHT; j++) {
             for (int i = 0; i < WIDTH; i++) {
                 this.add(new HiddenCell(i, j));
             }
+        }
+        for (Component component : this.getComponents()) {
+            component.setFocusable(false);
         }
     }
 
@@ -143,8 +153,8 @@ public class MinefieldPanel extends JPanel {
     @Override
     public Dimension getPreferredSize() {
         // Ratio
-        int width = getParent().getWidth();
-        int height = getParent().getHeight();
+        int width = getParent().getWidth() - 16;
+        int height = getParent().getHeight() - 16;
         double desiredRatio = (float) WIDTH / HEIGHT;
         double actualRatio = (float) width / height;
         if (actualRatio < desiredRatio) {
@@ -154,8 +164,14 @@ public class MinefieldPanel extends JPanel {
             width = (int) (height * desiredRatio);
         }
 
-        this.repaint();
         return new Dimension(width, height);
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        g.setColor(Color.LIGHT_GRAY);
+        g.fillRect(0, 0, getWidth(), getHeight());
     }
 
     public int getWidthInCells() {
