@@ -31,13 +31,11 @@ public class Window {
 
         makeMenuBar(window);
         Container contentPane = window.getContentPane();
-
         contentPane.setLayout(new BorderLayout(3, 3));
-
         MinefieldPanel minefieldPanel = new MinefieldPanel();
         JPanel minefieldPanelContainer = new JPanel();
+        
         minefieldPanelContainer.add(minefieldPanel);
-
         contentPane.add(minefieldPanelContainer, BorderLayout.CENTER);
         contentPane.add(new JPanel(), BorderLayout.NORTH);
         contentPane.add(new JPanel(), BorderLayout.EAST);
@@ -53,7 +51,7 @@ public class Window {
         }
 
         window.pack();
-        Dimension minSize = new Dimension((minefieldPanel.getWidthInCells() + 4) * 20, (minefieldPanel.getHeightInCells() + 4) * 20);
+        Dimension minSize = new Dimension((minefieldPanel.getWidthInCells() + 4) * 25, (minefieldPanel.getHeightInCells() + 4) * 25);
         window.setMinimumSize(minSize);
         window.setSize(minSize);
         window.setVisible(true);

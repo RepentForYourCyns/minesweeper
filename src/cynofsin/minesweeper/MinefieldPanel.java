@@ -76,8 +76,8 @@ public class MinefieldPanel extends JPanel {
         }
     }
 
-    private static final int WIDTH = 30;
-    private static final int HEIGHT = 40;
+    private static final int WIDTH = 10;
+    private static final int HEIGHT = 15;
     private GameSession session = new GameSession(
             new Minefield(WIDTH, HEIGHT, new Random()));
 
